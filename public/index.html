@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zima Builder 🐳</title>
+
+    <!-- İKON AYARLARI -->
+    <link rel="icon" type="image/png" href="/ikon.png">
+    <link rel="apple-touch-icon" href="/ikon.png">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #161b22;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+        }
+        h2 {
+            color: #58a6ff;
+            margin: 0;
+        }
+        .version {
+            font-size: 0.8em;
+            color: #ffffff;
+            background: #d29922; /* v2.0 için Altın Sarısı */
+            padding: 2px 8px;
+            border-radius: 10px;
+            vertical-align: middle;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b949e;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #58a6ff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #238636;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        .note {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #8b949e;
+            text-align: center;
+        }
+        .save-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #8b949e;
+        }
+        .save-info input {
+            width: auto;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Sayfa içinde de logo görünsün -->
+            <img src="/ikon.png" alt="Logo" onerror="this.style.display='none'">
+            <h2>Zima Builder <span class="version">v2.0</span></h2>
+        </div>
+
+        <form id="buildForm" action="/build-push" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Proje Adı (İmaj Adı Olacak)</label>
+                <input type="text" name="projectName" placeholder="ornek-proje" required>
+            </div>
+
+            <div class="form-group">
+                <label>Docker Hub Kullanıcı Adı</label>
+                <input type="text" id="dockerUser" name="dockerUser" required>
+            </div>
+
+            <div class="form-group">
+                <label>Docker Hub Şifresi / Token</label>
+                <input type="password" id="dockerPass" name="dockerPass" placeholder="Şifreniz" required>
+            </div>
+
+            <div class="save-info">
+                <input type="checkbox" id="rememberMe" checked>
+                <label for="rememberMe" style="margin:0; cursor:pointer;">Bilgilerimi Hatırla</label>
+            </div>
+
+            <div class="form-group">
+                <label>Proje Dosyaları (.zip)</label>
+                <input type="file" name="projectZip" accept=".zip" required>
+            </div>
+
+            <button type="submit">Build & Push 🚀</button>
+        </form>
+        <p class="note">Zip içinde package.json varsa Node.js, yoksa HTML olarak derlenir.</p>
+    </div>
+
+    <script>
+        // Sayfa Yüklendiğinde Bilgileri Getir
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('zima_dockerUser');
+            const savedPass = localStorage.getItem('zima_dockerPass');
+
+            if (savedUser) document.getElementById('dockerUser').value = savedUser;
+            if (savedPass) document.getElementById('dockerPass').value = savedPass;
+        });
+
+        // Form Gönderilirken Bilgileri Kaydet
+        document.getElementById('buildForm').addEventListener('submit', () => {
+            const remember = document.getElementById('rememberMe').checked;
+            const user = document.getElementById('dockerUser').value;
+            const pass = document.getElementById('dockerPass').value;
+
+            if (remember) {
+                localStorage.setItem('zima_dockerUser', user);
+                localStorage.setItem('zima_dockerPass', pass);
+            } else {
+                localStorage.removeItem('zima_dockerUser');
+                localStorage.removeItem('zima_dockerPass');
+            }
+        });
+    </script>
+</body>
+</html>

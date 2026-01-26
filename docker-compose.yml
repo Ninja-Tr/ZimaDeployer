@@ -1,0 +1,21 @@
+name: zima-deployer
+services:
+  zima-deployer:
+    image: ninja34/zima-deployer:latest
+    container_name: zima-deployer
+    restart: unless-stopped
+    ports:
+      # PORT GÜNCELLENDİ
+      - "9191:9191"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /DATA/AppData/zima-deployer/uploads:/app/uploads
+    
+    privileged: true
+    
+    x-casaos:
+      icon: http://zimadeployer.yigit-elektronik.com/ikon.png
+      title:
+        en_us: Zima Builder
+      description:
+        en_us: Auto-updating Docker Image Builder. Upload Zip -> Push to Hub.
